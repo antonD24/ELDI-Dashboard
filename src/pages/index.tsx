@@ -133,21 +133,56 @@ export default function Home() {
                         <div className="flex justify-between items-center">
                           <div>
                             <h3 className="font-semibold text-gray-800">
-                              {emergency.name ? `${emergency.name.firstname} ${emergency.name.lastname}` : `Case #${(index + 1).toString().padStart(3, '0')}`}
+                              {emergency.firstname && emergency.lastname 
+                                ? `${emergency.firstname} ${emergency.lastname}` 
+                                : `Case #${(index + 1).toString().padStart(3, '0')}`}
                             </h3>
                             <p className="text-sm text-gray-600">{emergency.content || 'Emergency Alert'}</p>
+                            {emergency.natid && (
+                              <p className="text-xs text-gray-500">ID: {emergency.natid}</p>
+                            )}
+                            {emergency.phone && (
+                              <p className="text-xs text-gray-500">Phone: {emergency.phone}</p>
+                            )}
                           </div>
                           <div className="text-right">
-                            <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                              emergency.isDone 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
-                            }`}>
-                              {emergency.isDone ? 'Resolved' : 'Critical'}
+                            <span className="inline-block px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                              Emergency
                             </span>
                             <p className="text-xs text-gray-500 mt-1">
                               {emergency.updatedAt ? new Date(emergency.updatedAt).toLocaleString() : 'Recently'}
                             </p>
+                            {emergency.location && emergency.location.lat && emergency.location.long && (
+                              <p className="text-xs text-blue-500 mt-1">
+                                📍 Location Available
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {/* Additional Info Section */}
+                        <div className="mt-3 pt-3 border-t border-gray-100">
+                          <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                            {emergency.email && (
+                              <div>
+                                <span className="font-medium">Email:</span> {emergency.email}
+                              </div>
+                            )}
+                            {emergency.relationshipstatus && (
+                              <div>
+                                <span className="font-medium">Status:</span> {emergency.relationshipstatus}
+                              </div>
+                            )}
+                            {emergency.ICEname && (
+                              <div>
+                                <span className="font-medium">Emergency Contact:</span> {emergency.ICEname}
+                              </div>
+                            )}
+                            {emergency.ICEphone && (
+                              <div>
+                                <span className="font-medium">ICE Phone:</span> {emergency.ICEphone}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
