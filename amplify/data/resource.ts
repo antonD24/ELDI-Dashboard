@@ -7,7 +7,9 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
- User: a.model({
+  EmergencyStatus: a.enum(['CREATED', 'OPEN', 'ASSIGNED', 'IN_PROGRESS', 'COMPLETE', 'REDIRECTED']),
+
+  User: a.model({
     id: a.id().required(),
     firstname: a.string().required(),
     lastname: a.string().required(),
@@ -38,11 +40,70 @@ const schema = a.schema({
       ICEphone: a.phone().required(),
       relationshipstatus: a.string().required(),
       location: a.customType({
+        lat: a.float(),
+        long: a.float(),
+      }),
+      ambulanceLocation: a.customType({
+        lat: a.float(),
+        long: a.float(),
+      }),
+      status: a.ref('EmergencyStatus'),
+      ambulanceId: a.id(),
+      ambulance: a.belongsTo('Ambulance', 'ambulanceId'),
+      createdAt: a.datetime(),
+      updatedAt: a.datetime(),
+    })
+    .secondaryIndexes((index) => [
+      index('natid').sortKeys(['createdAt']).name('byNatidCreatedAt'),
+    ])
+    .authorization((allow) => [
+    allow.authenticated().to(['read', 'create', 'update', 'delete']),
+    allow.groups(['dispatcher', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
+  ]),
+
+  ManualCases: a
+    .model({
+      description: a.string(),
+      natid: a.string(),
+      firstname: a.string(),
+      lastname: a.string(),
+      dob: a.date(),  
+      email: a.email(),
+      phone: a.phone(),
+      location: a.customType({
+        lat: a.float(),
+        long: a.float(),
+      }),
+      homeaddress: a.string(),
+      ICEname: a.string(),
+      ICEphone: a.phone(),
+      relationshipstatus: a.string(),
+      createdAt: a.datetime(),
+      updatedAt: a.datetime(),
+    })
+    
+    .authorization((allow) => [
+    allow.authenticated().to(['read', 'create', 'update']),
+    allow.groups(['dispatcher', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
+  ]),
+
+  Ambulance: a.model({
+    id: a.id().required(),
+    name: a.string().required(),
+
+    location: a.customType({
       lat: a.float(),
       long: a.float(),
     }),
-  })
-  .authorization((allow) => [allow.authenticated()]),
+    status: a.enum(['available', 'busy', 'offline']),
+    emergencies: a.hasMany('Emergency', 'ambulanceId'),
+    createdAt: a.datetime(),
+    updatedAt: a.datetime(),
+  }).authorization((allow) => [
+    allow.authenticated().to(['read', 'create', 'update','delete']),
+
+    allow.groups(['dispatcher', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
+  ]), 
 
   Locations: a.model({
     name: a.string(),
