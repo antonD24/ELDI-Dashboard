@@ -71,7 +71,7 @@ export default function AmbulancesPage() {
 
   return (
     <Authenticator>
-      {({ signOut, user }) => (
+      {({ signOut }) => (
         <div className={`${geistSans.className} ${geistMono.className} font-sans min-h-screen`}>
           {/* Navigation Bar */}
           <nav className="bg-black shadow-2xl border-gray-200 rounded-[50px] mt-4 mx-2">

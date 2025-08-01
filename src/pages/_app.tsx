@@ -33,8 +33,6 @@ const components = {
 
 
   Header() {
-    const { tokens } = useTheme();
-
     return (
       <View 
         textAlign="center" 
@@ -77,7 +75,6 @@ const components = {
 
 export default function App({ Component, pageProps }: AppProps) {
 
-const { tokens } = useTheme();
   const theme: Theme = {
     name: 'ELDI Auth Theme',
     tokens: {

@@ -5,11 +5,10 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
 import outputs from "../../amplify_outputs.json";
-import { signOut } from '@aws-amplify/auth';
 import { generateClient } from "aws-amplify/data";
 import { useState, useEffect } from "react";
 
-import { data, type Schema } from "../../amplify/data/resource";
+import { type Schema } from "../../amplify/data/resource";
 
 const client = generateClient<Schema>();
 
@@ -26,15 +25,14 @@ const geistMono = Geist_Mono({
 });
 
 export default function Home() {
-  const [emergencies, setEmergencies] = useState<any[]>([]);
+  const [emergencies, setEmergencies] = useState<Schema["Emergency"]["type"][]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
-  const [selectedCase, setSelectedCase] = useState<any>(null);
-  const [caseActive, setCaseActive] = useState<boolean>(false);
+  const [selectedCase, setSelectedCase] = useState<Schema["Emergency"]["type"] | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [pendingStateChange, setPendingStateChange] = useState<{ case: any, newState: 'CREATED' | 'OPEN' | 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETE' | 'REDIRECTED' } | null>(null);
+  const [pendingStateChange, setPendingStateChange] = useState<{ case: Schema["Emergency"]["type"], newState: 'CREATED' | 'OPEN' | 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETE' | 'REDIRECTED' } | null>(null);
   
   // Add new state for ambulance assignment
   const [showAmbulanceDialog, setShowAmbulanceDialog] = useState(false);
@@ -115,16 +113,16 @@ export default function Home() {
       console.log('Cleaning up Emergency subscription');
       subscription.unsubscribe();
     };
-  }, []);
+  }, [emergencies.length]);
 
   //Open case in the right section
-  const openCase = (emergency: any) => {
+  const openCase = (emergency: Schema["Emergency"]["type"]) => {
     setSelectedCase(emergency);
     console.log('Opening case:', emergency);
   };
 
   // Show confirmation dialog before changing status
-  const requestStatusChange = (emergency: any, newStatus: 'CREATED' | 'OPEN' | 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETE' | 'REDIRECTED') => {
+  const requestStatusChange = (emergency: Schema["Emergency"]["type"], newStatus: 'CREATED' | 'OPEN' | 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETE' | 'REDIRECTED') => {
     setPendingStateChange({ case: emergency, newState: newStatus });
     setShowConfirmDialog(true);
   };
@@ -150,7 +148,7 @@ export default function Home() {
   };
 
   //Update the status
-  const changeStatus = async (emergency: any, newStatus: 'CREATED' | 'OPEN' | 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETE' | 'REDIRECTED') => {
+  const changeStatus = async (emergency: Schema["Emergency"]["type"], newStatus: 'CREATED' | 'OPEN' | 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETE' | 'REDIRECTED') => {
     setIsUpdating(true);
     try {
       console.log('=== Starting changeStatus ===');
@@ -282,7 +280,7 @@ export default function Home() {
 
   return (
     <Authenticator>
-      {({ signOut, user }) => (
+      {({ signOut }) => (
         <div className={`${geistSans.className} ${geistMono.className} font-sans min-h-screen`}>
           {/* Navigation Bar */}
           <nav className="bg-black shadow-2xl border-gray-200 rounded-[50px] mt-4 mx-2">
