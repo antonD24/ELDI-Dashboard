@@ -49,10 +49,8 @@ Resources:
 Outputs:
   AppId: 
     Value: !GetAtt AmplifyApp.AppId
-    Export:
-      Name: !Sub 'AppId'
+    
 
   WebHookUrl:
     Value: !GetAtt WebHook.Url
-    Export:
-      Name: !Sub '${AWS::StackName}-WebHookUrl'
+    
