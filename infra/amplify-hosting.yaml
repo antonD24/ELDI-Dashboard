@@ -46,6 +46,6 @@ Outputs:
     Value: !GetAtt AmplifyApp.AppId
   BranchOut:
     Description: "The Amplify Branch Name"
-    Value: !Ref MainBranch.BranchName
+    Value: !Ref BranchName
     
     
