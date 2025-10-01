@@ -25,7 +25,7 @@ Resources:
       Name: !Ref AppName
       Repository: !Ref RepoUrl
       AccessToken: !Sub '{{resolve:secretsmanager:${GithubSecretPATArn}:SecretString:token}}'
-      AutoBrachCreationConfig:
+      AutoBranchCreationConfig:
         EnableAutoBuild: true
       EnvironmentVariables:
         - Name: AMPLIFY_MONOREPO_APP_ROOT
