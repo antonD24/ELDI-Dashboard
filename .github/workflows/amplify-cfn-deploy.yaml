@@ -81,9 +81,9 @@ jobs:
       - name: Deploy Amplify back-end
         run: |
           export CI=1
-          npx amplify-backend deploy \
+          npx ampx pipeline-deploy \
             --appId "${{ steps.cfn_outputs.outputs.app_id }}" \
-            --branchName "${{ env.BRANCH_NAME }}"
+            --branch "${{ env.BRANCH_NAME }}"
 
       - name: Trigger front-end build
         if: env.BRANCH_NAME == 'main'
@@ -92,5 +92,5 @@ jobs:
           BRANCH="${{ steps.cfn_outputs.outputs.branch_name || 'main' }}"
           aws amplify start-job \
             --app-id "$APP_ID" \
-            --branch-name "$BRANCH" \
+            --branch "$BRANCH" \
             --job-type RELEASE
