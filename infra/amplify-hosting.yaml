@@ -50,7 +50,7 @@ Outputs:
   AppId: 
     Value: !GetAtt AmplifyApp.AppId
     Export:
-      Name: !Sub '${StackName}-AppId'
+      Name: !Sub 'AppId'
 
   WebHookUrl:
     Value: !GetAtt WebHook.Url
