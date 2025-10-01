@@ -10,6 +10,7 @@ permissions:
   contents: read
 
 env:
+  CI: "true"
   AWS_REGION: eu-west-3
   STACK_NAME: amplify-hosting-eldi
   BRANCH_NAME: ${{ github.ref_name }}
@@ -80,7 +81,7 @@ jobs:
       - name: Deploy Amplify back-end
         run: |
           export CI=1
-          npx ampx pipeline-deploy \
+          npx amplify-backend deploy \
             --appId "${{ steps.cfn_outputs.outputs.app_id }}" \
             --branchName "${{ env.BRANCH_NAME }}"
 
