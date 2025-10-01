@@ -52,20 +52,20 @@ jobs:
           aws cloudformation deploy \
             --stack-name $STACK_NAME \
             --template-file infra/amplify-hosting.yaml \
-            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \ 
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --parameter-overrides \
               RepoUrl=https://github.com/antonD24/ELDI-Dashboard \
               AppName=eldi-web \
               BranchName=${{ env.BRANCH_NAME }} \
-              GitHubPATSecretArn=${{ steps.sm.outputs.arn }}
+              GithubSecretPATArn=${{ steps.sm.outputs.arn }}
 
       - name: Get Stack outputs
         id: cfn_outputs
         run: |
-          APP_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME \ 
+          APP_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME \
             --query "Stacks[0].Outputs[?OutputKey=='AppId'].OutputValue" --output text)
-          WEBHOOK_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME \ 
-            --query "Stacks[0].Outputs[?OutputKey=='WebhookUrl'].OutputValue" --output text)
+          WEBHOOK_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME \
+            --query "Stacks[0].Outputs[?OutputKey=='WebHookUrl'].OutputValue" --output text)
           echo "app_id=$APP_ID" >> "$GITHUB_OUTPUT"
           echo "webhook_url=$WEBHOOK_URL" >> "$GITHUB_OUTPUT"
 
