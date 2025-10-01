@@ -36,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           if aws secretsmanager describe-secret --secret-id $SECRET_NAME >/dev/null 2>&1; then
-            aws secretmanager put-secret-value \
+            aws secretsmanager put-secret-value \
               --secret-id $SECRET_NAME \
               --secret-string "{\"token\":\"$GH_PAT\"}" >/dev/null
           else
