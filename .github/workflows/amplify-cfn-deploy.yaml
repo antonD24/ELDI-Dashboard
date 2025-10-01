@@ -87,5 +87,9 @@ jobs:
       - name: Trigger front-end build
         if: env.BRANCH_NAME == 'main'
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{}' \
-            "${{ steps.cfn_outputs.outputs.webhook_url }}"
+          APP_ID="${{ steps.cfn_outputs.outputs.app_id }}"
+          BRANCH="${{ steps.cfn_outputs.outputs.branch_name || 'main' }}"
+          aws amplify start-job \
+            --app-id "$APP_ID" \
+            --branch-name "$BRANCH" \
+            --job-type RELEASE
