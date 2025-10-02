@@ -52,8 +52,6 @@ Outputs:
   BranchOut:
     Description: "The Amplify Branch Name"
     Value: !Ref BranchName
-  RoleOut:
-    Description: "The IAM Role ARN for Amplify to access SSM parameters"
-    Value: !GetAtt AmplifyParameterRole.Arn
+  
     
     
