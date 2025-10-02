@@ -17,30 +17,11 @@ Parameters:
   GithubSecretPATArn:
     Type: String
     Description: The GitHub Personal Access Token (PAT) secret stored in AWS Secrets Manager.
+  AmplifyServiceRoleArn:
+    Type: String
+    Description: The ARN of the IAM Role that Amplify will use to access AWS resources.
 
 Resources:
-
-  AmplifyParameterRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: amplify.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: AmplifyParameterPolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ssm:GetParameter
-                  - ssm:GetParameters
-                  - ssm:GetParametersByPath
-                Resource: "*"
 
   AmplifyApp:
     Type: AWS::Amplify::App
@@ -48,6 +29,7 @@ Resources:
       Name: !Ref AppName
       Repository: !Ref RepoUrl
       AccessToken: !Sub '{{resolve:secretsmanager:${GithubSecretPATArn}:SecretString:token}}'
+      IAMServiceRole: !Ref AmplifyServiceRoleArn
       AutoBranchCreationConfig:
         EnableAutoBuild: true
       EnvironmentVariables:

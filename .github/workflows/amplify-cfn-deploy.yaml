@@ -58,7 +58,8 @@ jobs:
               RepoUrl=https://github.com/antonD24/ELDI-Dashboard \
               AppName=eldi-web \
               BranchName=${{ env.BRANCH_NAME }} \
-              GithubSecretPATArn=${{ steps.sm.outputs.arn }}
+              GithubSecretPATArn=${{ steps.sm.outputs.arn }} \
+              AmplifyServiceRoleArn=${{ secrets.AWS_OIDC_ROLE_ARN }}
 
       - name: Get Stack outputs
         id: cfn_outputs
@@ -66,9 +67,6 @@ jobs:
           APP_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME \
             --query "Stacks[0].Outputs[?OutputKey=='AppId'].OutputValue" --output text)
           WEBHOOK_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME \
-            --query "Stacks[0].Outputs[?OutputKey=='WebHookUrl'].OutputValue" --output text)
-          echo "app_id=$APP_ID" >> "$GITHUB_OUTPUT"
-          echo "webhook_url=$WEBHOOK_URL" >> "$GITHUB_OUTPUT"
 
       - name: Use Node
         uses: actions/setup-node@v4
@@ -84,19 +82,5 @@ jobs:
           npx ampx pipeline-deploy \
             --appId "${{ steps.cfn_outputs.outputs.app_id }}" \
             --branch "${{ env.BRANCH_NAME }}"
-
-      - name: Configure AWS Credentials (Front-end Build)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_BUILD_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
             
-      - name: Trigger front-end build
-        if: env.BRANCH_NAME == 'main'
-        run: |
-          APP_ID="${{ steps.cfn_outputs.outputs.app_id }}"
-          BRANCH="${{ steps.cfn_outputs.outputs.branch_name || 'main' }}"
-          aws amplify start-job \
-            --app-id "$APP_ID" \
-            --branch "$BRANCH" \
-            --job-type RELEASE
+      
