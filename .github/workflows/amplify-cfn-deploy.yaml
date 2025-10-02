@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
@@ -85,6 +85,12 @@ jobs:
             --appId "${{ steps.cfn_outputs.outputs.app_id }}" \
             --branch "${{ env.BRANCH_NAME }}"
 
+      - name: Configure AWS Credentials (Front-end Build)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ steps.cfn_outputs.outputs.role_out }}
+          aws-region: ${{ env.AWS_REGION }}
+            
       - name: Trigger front-end build
         if: env.BRANCH_NAME == 'main'
         run: |
