@@ -20,6 +20,9 @@ Parameters:
   AmplifyServiceRoleArn:
     Type: String
     Description: The ARN of the IAM Role that Amplify will use to access AWS resources.
+  PublicPrefix:
+    Type: String
+    Description: The S3 prefix (folder) to store public configuration files.
 
 Resources:
 
@@ -63,6 +66,44 @@ Resources:
               cache:
                 paths:
                   - node_modules/**/*
+    
+  ConfigBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${AppName}-amplify-config-${AWS::AccountId}-${AWS::Region}'
+      VersioningConfiguration:
+        Status: Enabled
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: false
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - HEAD
+            AllowedOrigins:
+              - '*'
+            MaxAge: 3000
+    
+  ConfigBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ConfigBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadForConfigPrefix
+            Effect: Allow
+            Principal: "*"
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::${BucketName}/${PublicPrefix}*
 
 Outputs:
   AppId:
@@ -71,3 +112,9 @@ Outputs:
   BranchOut:
     Description: "The Amplify Branch Name"
     Value: !Ref BranchName
+  BucketNameOut:
+    Value: !Ref BucketName
+  PublicPrefixOut:
+    Value: !Ref PublicPrefix
+  PublicUrlPrefix:
+    Value: !Sub https://${BucketName}.s3.${AWS::Region}.amazonaws.com/${PublicPrefix}
