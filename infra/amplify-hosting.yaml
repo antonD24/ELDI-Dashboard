@@ -45,15 +45,29 @@ Resources:
       Stage: PRODUCTION
       EnableAutoBuild: true
       Framework: "Next.js - SSR"
+      BuildSpec: |
+        version: 1
+        applications:
+          - appRoot: .
+            frontend:
+              phases:
+                preBuild:
+                  commands:
+                    - npm ci
+                build:
+                  commands:
+                    - npm run build
+              artifacts:
+                files:
+                  - '**/*'
+              cache:
+                paths:
+                  - node_modules/**/*
 
-  
 Outputs:
-  AppId: 
+  AppId:
     Description: "The Amplify App ID"
     Value: !GetAtt AmplifyApp.AppId
   BranchOut:
     Description: "The Amplify Branch Name"
     Value: !Ref BranchName
-  
-    
-    
