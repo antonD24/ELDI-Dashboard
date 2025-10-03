@@ -82,5 +82,13 @@ jobs:
           npx ampx pipeline-deploy \
             --appId "${{ steps.cfn_outputs.outputs.app_id }}" \
             --branch "${{ env.BRANCH_NAME }}"
+
+      - name: Trigger Amplify front-end build
+        run: |
+          aws amplify start-job \
+            --app-id "${{ steps.cfn_outputs.outputs.app_id }}" \
+            --branch-name "${{ env.BRANCH_NAME }}" \
+            --job-type RELEASE
+            --region ${{ env.AWS_REGION }}
             
       
