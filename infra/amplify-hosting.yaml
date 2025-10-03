@@ -30,6 +30,7 @@ Resources:
       Repository: !Ref RepoUrl
       AccessToken: !Sub '{{resolve:secretsmanager:${GithubSecretPATArn}:SecretString:token}}'
       IAMServiceRole: !Ref AmplifyServiceRoleArn
+      Platform: WEB_COMPUTE
       AutoBranchCreationConfig:
         EnableAutoBuild: true
       EnvironmentVariables:
@@ -43,6 +44,7 @@ Resources:
       BranchName: !Ref BranchName
       Stage: PRODUCTION
       EnableAutoBuild: true
+      Framework: "Next.js - SSR"
 
   
 Outputs:
