@@ -313,7 +313,7 @@ export default function Home() {
                     </Link>
                     <Link
                       href="/ambulances"
-                      className="text-white bg-sky-700 hover:bg-sky-800 trans px-6 py-4 rounded-[50px] text-sm font-medium"
+                      className="text-white bg-green-700 hover:bg-sky-800 trans px-6 py-4 rounded-[50px] text-sm font-medium"
                     >
                       Ambulances
                     </Link>

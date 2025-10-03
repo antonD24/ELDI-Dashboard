@@ -48,7 +48,7 @@ jobs:
           ARN=$(aws secretsmanager describe-secret --secret-id $SECRET_NAME --query ARN --output text)
           echo "arn=$ARN" >> "$GITHUB_OUTPUT"
 
-      - name: Deploy CloudFormation Stack
+      - name: Deploy CloudFormation (Amplify Hosting) Stack
         run: |
           aws cloudformation deploy \
             --stack-name $STACK_NAME \
