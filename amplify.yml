@@ -7,9 +7,9 @@ applications:
             - npm ci
         build:
           commands:
-            - npm run build && npm run export
+            - npm run build
       artifacts:
-        baseDirectory: out
+
         files:
           - '**/*'
       cache:

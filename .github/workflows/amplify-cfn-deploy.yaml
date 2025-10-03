@@ -61,11 +61,12 @@ jobs:
               GithubSecretPATArn=${{ steps.sm.outputs.arn }} \
               AmplifyServiceRoleArn=${{ secrets.AWS_OIDC_ROLE_ARN }}
 
-      - name: Get Stack outputs
+      - name: Get Stack Outputs
         id: cfn_outputs
         run: |
           APP_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME \
             --query "Stacks[0].Outputs[?OutputKey=='AppId'].OutputValue" --output text)
+          echo "app_id=$APP_ID" >> $GITHUB_OUTPUT
 
       - name: Use Node
         uses: actions/setup-node@v4
