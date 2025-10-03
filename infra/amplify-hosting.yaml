@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Amplify Hosting + main branch (Amplify Gen 2 Custom Pipeline)'
+Description: 'Amplify Hosting + Main Branch (Amplify Gen 2 Custom Pipeline)'
 
 Parameters:
   RepoUrl:
