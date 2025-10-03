@@ -96,7 +96,7 @@ jobs:
 
       - name: Generate Amplfy Outputs
         run: |
-          npx ampx generate-outputs \
+          npx ampx generate outputs \
             --appId "${{ steps.cfn_outputs.outputs.app_id }}" \
             --branch "${{ env.BRANCH_NAME }}"
             --out amplify-outputs.json
