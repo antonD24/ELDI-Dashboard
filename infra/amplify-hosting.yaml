@@ -70,7 +70,7 @@ Resources:
   ConfigBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${AppName}-amplify-config'
+      BucketName: !Sub '${AppName}-amplify-config-${AWS::AccountId}-${AWS::Region}'
       VersioningConfiguration:
         Status: Enabled
       OwnershipControls:
@@ -103,7 +103,7 @@ Resources:
             Effect: Allow
             Principal: "*"
             Action: s3:GetObject
-            Resource: !Sub arn:aws:s3:::${BucketName}/${PublicPrefix}*
+            Resource: !Sub arn:aws:s3:::${ConfigBucket}/${PublicPrefix}*
 
 Outputs:
   AppId:
@@ -113,8 +113,8 @@ Outputs:
     Description: "The Amplify Branch Name"
     Value: !Ref BranchName
   BucketNameOut:
-    Value: !Ref BucketName
+    Value: !Ref ConfigBucket
   PublicPrefixOut:
     Value: !Ref PublicPrefix
   PublicUrlPrefix:
-    Value: !Sub https://${BucketName}.s3.${AWS::Region}.amazonaws.com/${PublicPrefix}
+    Value: !Sub https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/${PublicPrefix}
