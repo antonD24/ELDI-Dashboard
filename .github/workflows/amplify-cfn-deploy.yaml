@@ -106,7 +106,7 @@ jobs:
           PUBLIC_PREFIX: ${{ steps.cfn_outputs.outputs.public_prefix }}
           AWS_REGION: ${{ env.AWS_REGION }}
         run: |
-          aws s3 cp amplify-outputs.json "s3://$BUCKET_NAME/$PUBLIC_PREFIX" \
+          aws s3 cp amplify_outputs.json "s3://$BUCKET_NAME/$PUBLIC_PREFIX" \
             --region $AWS_REGION \
             --cache-control "no-cache, no-store, must-revalidate"
           echo "PUBLIC_URL=${{ steps.cfn_outputs.outputs.public_url }}" >> $GITHUB_ENV
