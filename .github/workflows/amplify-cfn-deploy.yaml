@@ -99,7 +99,6 @@ jobs:
           npx ampx generate outputs \
             --appId "${{ steps.cfn_outputs.outputs.app_id }}" \
             --branch "${{ env.BRANCH_NAME }}"
-            --out amplify-outputs.json
 
       - name: Upload Amplify Outputs to S3
         env:
