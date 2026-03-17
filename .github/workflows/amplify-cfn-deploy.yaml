@@ -34,7 +34,7 @@ jobs:
         shell: bash
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
-          SECRET_NAME: github/pat
+          SECRET_NAME: github/tokens/pat
         run: |
           set -euo pipefail
           if aws secretsmanager describe-secret --secret-id $SECRET_NAME >/dev/null 2>&1; then
